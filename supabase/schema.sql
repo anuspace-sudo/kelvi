@@ -64,3 +64,21 @@ from (
     (24, 'How do I scale reads with replicas?', 'Ravi'),
     (25, 'What''s the best way to add auth later?', 'Priya')
 ) as seed(n, body, author);
+CREATE TABLE polls (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  question TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE poll_options (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  poll_id BIGINT REFERENCES polls(id) ON DELETE CASCADE,
+  option_text TEXT NOT NULL
+);
+
+CREATE TABLE poll_votes (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  poll_id BIGINT REFERENCES polls(id) ON DELETE CASCADE,
+  option_id BIGINT REFERENCES poll_options(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT NOW()
+);
